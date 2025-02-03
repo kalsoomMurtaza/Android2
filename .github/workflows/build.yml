@@ -1,0 +1,50 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+      
+  pull_request:
+    branches:
+      - main
+      
+
+jobs:
+  build:
+    name: Build and Test Android App
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1 Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2 Set up JDK 11 (compatible with AGP 7.0.4)
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+
+      # 3 Cache Gradle dependencies
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      # 4 Grant execute permission for Gradlew
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./src/gradlew
+
+      # 5 Build the app successfuly (using gradlew from src)
+      - name: Build with Gradle (from app directory)
+        run: ./src/gradlew --project-dir ./src/app assembleDebug
+
+      # 6 Run Unit Tests
+      - name: Run Unit Tests
+        run: ./src/gradlew --project-dir ./src/app testDebugUnitTest
+
