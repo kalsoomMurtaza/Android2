@@ -43,10 +43,12 @@ jobs:
       - name: Run Detekt check
         run: ./src/gradlew --project-dir ./src/app detekt
 
-      # 7 Build the app successfully (using gradlew from src)
+        # 7 Run Unit Tests
+      - name: Run Unit Tests
+        run: ./src/gradlew --project-dir ./src/app testDebugUnitTest
+
+      # 8 Build the app successfully (using gradlew from src)
       - name: Build with Gradle (from app directory)
         run: ./src/gradlew --project-dir ./src/app assembleDebug
 
-      # 8 Run Unit Tests
-      - name: Run Unit Tests
-        run: ./src/gradlew --project-dir ./src/app testDebugUnitTest
+      
