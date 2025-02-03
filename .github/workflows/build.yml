@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - main
-      
-  # pull_request to kalsoom:
-  #   branches:
-  #     - main
-      #sdggegaer
 
 jobs:
   build:
@@ -40,11 +35,18 @@ jobs:
       - name: Grant execute permission for Gradlew
         run: chmod +x ./src/gradlew
 
-      # 5 Build the app successfuly (using gradlew from src)
+      # 5 Run Ktlint check
+      - name: Run Ktlint check
+        run: ./src/gradlew --project-dir ./src/app ktlintCheck
+
+      # 6 Run Detekt check
+      - name: Run Detekt check
+        run: ./src/gradlew --project-dir ./src/app detekt
+
+      # 7 Build the app successfully (using gradlew from src)
       - name: Build with Gradle (from app directory)
         run: ./src/gradlew --project-dir ./src/app assembleDebug
 
-      # 6 Run Unit Tests
+      # 8 Run Unit Tests
       - name: Run Unit Tests
         run: ./src/gradlew --project-dir ./src/app testDebugUnitTest
-
